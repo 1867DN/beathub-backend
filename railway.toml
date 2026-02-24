@@ -6,3 +6,8 @@ startCommand = "python run_production.py"
 healthcheckPath = "/health_check"
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"
+
+[deploy.environmentVariables]
+RATE_LIMIT_ENABLED = "false"
+REDIS_ENABLED = "false"
+UVICORN_WORKERS = "1"

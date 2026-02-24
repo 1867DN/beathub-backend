@@ -10,7 +10,11 @@ services:
     healthCheckPath: /health_check
     port: 8000
     envVars:
-      # --- Base de datos (vinculada automáticamente) ---
+      # --- Base de datos (DATABASE_URL es el primero que lee la app) ---
+      - key: DATABASE_URL
+        fromDatabase:
+          name: beathub-db
+          property: connectionString
       - key: POSTGRES_HOST
         fromDatabase:
           name: beathub-db

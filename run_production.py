@@ -16,7 +16,9 @@ CPU_COUNT = multiprocessing.cpu_count()
 DEFAULT_WORKERS = min(max(2 * CPU_COUNT + 1, 4), 8)  # Between 4-8 workers
 
 # Configuration from environment variables
-WORKERS = int(os.getenv('UVICORN_WORKERS', DEFAULT_WORKERS))
+# Free-tier platforms (Railway/Render) require single worker
+# Multi-workers only work when using gunicorn as process manager
+WORKERS = int(os.getenv('UVICORN_WORKERS', '1'))
 HOST = os.getenv('API_HOST', '0.0.0.0')
 # Railway/Render inject PORT — fall back to API_PORT, then 8000
 PORT = int(os.getenv('PORT', os.getenv('API_PORT', '8000')))
