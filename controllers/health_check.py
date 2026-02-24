@@ -17,58 +17,9 @@ from datetime import datetime
 
 router = APIRouter()
 
-# Health check thresholds
-THRESHOLDS = {
-    "db_pool_utilization": {
-        "warning": 70.0,  # %
-        "critical": 90.0  # %
-    },
-    "db_latency": {
-        "warning": 100.0,  # milliseconds
-        "critical": 500.0  # milliseconds
-    }
-}
 
-
-def evaluate_health_level(*statuses):
-    """
-    Evaluate overall health based on multiple component statuses.
-
-    Priority: critical > degraded > warning > healthy
-
-    Args:
-        *statuses: Variable number of status strings
-
-    Returns:
-        Overall health status string
-    """
-    if "critical" in statuses:
-        return "critical"
-    if "degraded" in statuses or "down" in statuses:
-        return "degraded"
-    if "warning" in statuses:
-        return "warning"
-    return "healthy"
-
-
-@router.get("/")
-def health_check():
-    """
-    Comprehensive health check endpoint with threshold-based monitoring
-
-    Returns the status of:
-    - Database connection (with latency thresholds)
-    - Redis cache
-    - Database connection pool metrics (with utilization thresholds)
-    - System timestamp
-    - Overall health level (healthy/warning/degraded/critical)
-
-    Status Levels:
-    - healthy: All systems operational
-    - warning: Performance degradation detected (exceeds warning thresholds)
-    - degraded: Non-critical component down (e.g., Redis)
-    - critical: Critical component down or exceeds critical thresholds
-    """
+def _do_health_check():
+    """Shared health check logic."""
     checks = {}
     component_statuses = []
 
@@ -117,7 +68,6 @@ def health_check():
         checked_out = pool.checkedout()
         utilization = (checked_out / total_connections * 100) if total_connections > 0 else 0
 
-        # Evaluate pool health based on utilization
         if utilization >= THRESHOLDS["db_pool_utilization"]["critical"]:
             pool_health = "critical"
             component_statuses.append("critical")
@@ -149,7 +99,6 @@ def health_check():
         }
         component_statuses.append("critical")
 
-    # Overall status based on all components
     overall_status = evaluate_health_level(*component_statuses)
 
     return {
@@ -157,3 +106,47 @@ def health_check():
         "timestamp": datetime.utcnow().isoformat(),
         "checks": checks
     }
+
+
+# Health check thresholds
+THRESHOLDS = {
+    "db_pool_utilization": {
+        "warning": 70.0,  # %
+        "critical": 90.0  # %
+    },
+    "db_latency": {
+        "warning": 100.0,  # milliseconds
+        "critical": 500.0  # milliseconds
+    }
+}
+
+
+def evaluate_health_level(*statuses):
+    """
+    Evaluate overall health based on multiple component statuses.
+
+    Priority: critical > degraded > warning > healthy
+
+    Args:
+        *statuses: Variable number of status strings
+
+    Returns:
+        Overall health status string
+    """
+    if "critical" in statuses:
+        return "critical"
+    if "degraded" in statuses or "down" in statuses:
+        return "degraded"
+    if "warning" in statuses:
+        return "warning"
+    return "healthy"
+
+
+@router.get("")
+@router.get("/")
+def health_check():
+    """
+    Comprehensive health check endpoint with threshold-based monitoring.
+    Responds to both /health_check and /health_check/ (Render/Railway compatible).
+    """
+    return _do_health_check()
