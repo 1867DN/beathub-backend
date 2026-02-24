@@ -8,6 +8,7 @@ services:
     dockerfilePath: ./Dockerfile.production
     plan: free
     healthCheckPath: /health_check
+    port: 8000
     envVars:
       # --- Base de datos (vinculada automáticamente) ---
       - key: POSTGRES_HOST
