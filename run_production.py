@@ -46,8 +46,8 @@ if __name__ == "__main__":
         db = SessionLocal()
         product_count = db.query(ProductModel).count()
         db.close()
-        if product_count == 0:
-            print("🌱 Database is empty — running seed data...")
+        if product_count < 50:
+            print(f"🌱 Database has {product_count} products (expected 52) — running seed data...")
             from seed_data import seed_database
             seed_database()
         else:
