@@ -1,0 +1,78 @@
+# Render Blueprint — BeatHub Backend
+# Documentación: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: beathub-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile.production
+    plan: free
+    healthCheckPath: /health_check
+    envVars:
+      # --- Base de datos (vinculada automáticamente) ---
+      - key: POSTGRES_HOST
+        fromDatabase:
+          name: beathub-db
+          property: host
+      - key: POSTGRES_PORT
+        fromDatabase:
+          name: beathub-db
+          property: port
+      - key: POSTGRES_DB
+        fromDatabase:
+          name: beathub-db
+          property: database
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: beathub-db
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: beathub-db
+          property: password
+
+      # --- App ---
+      - key: API_HOST
+        value: "0.0.0.0"
+      - key: API_PORT
+        value: "8000"
+      - key: UVICORN_WORKERS
+        value: "1"
+      - key: RELOAD
+        value: "false"
+      - key: LOG_LEVEL
+        value: "INFO"
+
+      # --- CORS (actualizar con la URL de Vercel una vez desplegado) ---
+      - key: CORS_ORIGINS
+        value: "*"
+
+      # --- Redis deshabilitado (Render free no tiene Redis) ---
+      - key: REDIS_ENABLED
+        value: "false"
+      - key: RATE_LIMIT_ENABLED
+        value: "false"
+
+      # --- Seguridad JWT (generado automáticamente) ---
+      - key: SECRET_KEY
+        generateValue: true
+
+      # --- Email (configurar manualmente en el dashboard de Render) ---
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      - key: MAIL_PORT
+        value: "587"
+      - key: MAIL_SERVER
+        value: "smtp.gmail.com"
+
+      # --- URL del frontend (actualizar con la URL de Vercel) ---
+      - key: FRONTEND_URL
+        sync: false
+
+databases:
+  - name: beathub-db
+    plan: free
