@@ -1,0 +1,8 @@
+[build]
+dockerfilePath = "Dockerfile.production"
+
+[deploy]
+startCommand = "python run_production.py"
+healthcheckPath = "/health_check"
+healthcheckTimeout = 300
+restartPolicyType = "on_failure"

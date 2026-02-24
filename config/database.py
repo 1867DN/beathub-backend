@@ -24,22 +24,27 @@ logger = logging.getLogger(__name__)
 env_path = os.path.join(os.path.dirname(__file__), '../.env')
 load_dotenv(env_path)
 
-# Database configuration with defaults
-POSTGRES_HOST = os.getenv('POSTGRES_HOST', 'localhost')
-POSTGRES_PORT = os.getenv('POSTGRES_PORT', '5432')
-POSTGRES_DB = os.getenv('POSTGRES_DB', 'postgres')
-POSTGRES_USER = os.getenv('POSTGRES_USER', 'postgres')
-POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD', 'postgres')
+# Database configuration
+# Railway/Render inject DATABASE_URL directly; fall back to individual vars
+DATABASE_URI = os.getenv('DATABASE_URL') or os.getenv('POSTGRES_URL')
 
-# High-performance connection pool configuration
-# For 400 concurrent requests with 4 workers: 400/4 = 100 connections per worker
-# Pool size + max_overflow should handle peak load
-POOL_SIZE = int(os.getenv('DB_POOL_SIZE', '50'))  # Base pool size per worker
-MAX_OVERFLOW = int(os.getenv('DB_MAX_OVERFLOW', '100'))  # Additional connections during peak
-POOL_TIMEOUT = int(os.getenv('DB_POOL_TIMEOUT', '10'))  # Wait time for connection (reduced for production)
-POOL_RECYCLE = int(os.getenv('DB_POOL_RECYCLE', '3600'))  # Recycle connections after 1 hour
+if not DATABASE_URI:
+    POSTGRES_HOST = os.getenv('POSTGRES_HOST', 'localhost')
+    POSTGRES_PORT = os.getenv('POSTGRES_PORT', '5432')
+    POSTGRES_DB = os.getenv('POSTGRES_DB', 'postgres')
+    POSTGRES_USER = os.getenv('POSTGRES_USER', 'postgres')
+    POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD', 'postgres')
+    DATABASE_URI = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}'
 
-DATABASE_URI = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}'
+# Railway a veces da postgres:// — SQLAlchemy necesita postgresql://
+if DATABASE_URI.startswith('postgres://'):
+    DATABASE_URI = DATABASE_URI.replace('postgres://', 'postgresql://', 1)
+
+# Connection pool (valores bajos para free tier)
+POOL_SIZE = int(os.getenv('DB_POOL_SIZE', '5'))
+MAX_OVERFLOW = int(os.getenv('DB_MAX_OVERFLOW', '10'))
+POOL_TIMEOUT = int(os.getenv('DB_POOL_TIMEOUT', '10'))
+POOL_RECYCLE = int(os.getenv('DB_POOL_RECYCLE', '3600'))
 
 # Create engine with optimized connection pooling for high concurrency
 engine = create_engine(
