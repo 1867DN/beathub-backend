@@ -58,13 +58,15 @@ SEED_BRANDS: List[Dict[str, str]] = [
 # ── CATEGORÍAS ───────────────────────────────────────────────────────────────
 SEED_CATEGORIES: List[Dict[str, str]] = [
     {"name": "Emulador de Amplificador"},
+    {"name": "Guitarra Eléctrica"},
+    {"name": "Pedal de Efectos"},
+    {"name": "Bajo Eléctrico"},
+    {"name": "Accesorios"},
+    {"name": "Amplificador"},
 ]
 
 # ── PRODUCTOS ─────────────────────────────────────────────────────────────────
-# Formato: name, price (transferencia), price_list (lista), discount_percent,
-#          stock, category_name, brand_name, description
 SEED_PRODUCTS: List[Dict] = [
-    # ── AMT ──
     {
         "name": "Pedal Legend Amps Amt F1 Twin Emulates Guitarra MINT",
         "price": 178056.00,
@@ -76,14 +78,103 @@ SEED_PRODUCTS: List[Dict] = [
         "description": (
             "AMT F-1 LEGEND AMPS\n"
             "El F-1 fue uno de los primeros diseños de la serie Legend Amps, diseñado para lograr "
-            "el clásico sonido de un Fender Twin. Se puede usar para crear un preamp multi canal "
-            "desde canales mono de cualquiera de los pedales de la serie Legend Amps (P-1, B-1, M-1, R-1, S-1). "
-            "Así la serie se expande constantemente, ofreciendo la oportunidad de lograr un sonido 100% análogo para tu guitarra.\n\n"
-            "Este pedal es un preamp con un canal limpio interno y la posibilidad de alternarlo con un canal externo "
-            "(cualquier otro pedal de overdrive). Posee un loop de efectos con una entrada estándar de -10dB preparada "
-            "para enchufar cualquier efecto auxiliar y boostearlo a 0dB o más, lo cual es más que suficiente para operar "
-            "directamente con la potencia del amplificador. En caso de conectar a una mixer o computadora, el preamp tiene "
-            "simulador de caja y parlantes."
+            "el clásico sonido de un Fender Twin."
+        ),
+    },
+    {
+        "name": "Guitarra Eléctrica Chapman ML1 Modern Slate Blue",
+        "price": 850000.00,
+        "price_list": 950000.00,
+        "discount_percent": 10,
+        "stock": 3,
+        "category_name": "Guitarra Eléctrica",
+        "brand_name": "CHAPMAN GUITARS",
+        "description": (
+            "Chapman ML1 Modern en color Slate Blue Satin.\n"
+            "Cuerpo de caoba, mástil de arce, escala de 25.5 pulgadas. "
+            "Perfecta para rock y metal moderno."
+        ),
+    },
+    {
+        "name": "Pedal Darkglass Alpha Omega Ultra V2",
+        "price": 620000.00,
+        "price_list": 680000.00,
+        "discount_percent": 8,
+        "stock": 2,
+        "category_name": "Pedal de Efectos",
+        "brand_name": "DARKGLASS",
+        "description": (
+            "Preamplificador y distorsión para bajo de alta gama.\n"
+            "Combina los circuitos Alpha y Omega en una sola unidad con EQ de 4 bandas, "
+            "cab sim y salida directa balanceada."
+        ),
+    },
+    {
+        "name": "Pedal Flamma FC300 Multi-Effects Processor",
+        "price": 195000.00,
+        "price_list": 220000.00,
+        "discount_percent": 11,
+        "stock": 5,
+        "category_name": "Pedal de Efectos",
+        "brand_name": "FLAMMA",
+        "description": (
+            "Procesador de efectos múltiples compacto.\n"
+            "Incluye más de 90 efectos, looper de 60 segundos, "
+            "expresión y conexión USB. Ideal para práctica y escenario."
+        ),
+    },
+    {
+        "name": "Correa Gruvgear FretWraps HD Pack x3",
+        "price": 42000.00,
+        "price_list": 48000.00,
+        "discount_percent": 12,
+        "stock": 10,
+        "category_name": "Accesorios",
+        "brand_name": "GRUVGEAR",
+        "description": (
+            "Pack de 3 FretWraps HD para silenciar cuerdas.\n"
+            "Disponibles en distintos tamaños para guitarra, bajo y ukelele. "
+            "Herramienta esencial para grabación en estudio."
+        ),
+    },
+    {
+        "name": "Púas Clayton Acetal Standard 0.38mm x12",
+        "price": 8500.00,
+        "price_list": 9500.00,
+        "discount_percent": 10,
+        "stock": 50,
+        "category_name": "Accesorios",
+        "brand_name": "CLAYTON",
+        "description": (
+            "Pack de 12 púas de acetal estándar calibre 0.38mm (extra light).\n"
+            "Material de alta calidad que produce un sonido brillante y preciso."
+        ),
+    },
+    {
+        "name": "Headrush MX5 Multi-FX & Amp Modeler",
+        "price": 1200000.00,
+        "price_list": 1350000.00,
+        "discount_percent": 11,
+        "stock": 2,
+        "category_name": "Emulador de Amplificador",
+        "brand_name": "HEADRUSH",
+        "description": (
+            "Potente modelador de amplificadores y procesador de efectos.\n"
+            "Pantalla táctil de 7 pulgadas, 33 modelos de amp, 42 efectos de calidad de estudio "
+            "y looper de 20 minutos."
+        ),
+    },
+    {
+        "name": "Correa Amumu Straps Leather Vintage Brown 8cm",
+        "price": 35000.00,
+        "price_list": 39000.00,
+        "discount_percent": 10,
+        "stock": 8,
+        "category_name": "Accesorios",
+        "brand_name": "AMUMU STRAPS",
+        "description": (
+            "Correa de cuero genuino marrón vintage de 8cm de ancho.\n"
+            "Ajustable de 95cm a 155cm. Extremos de cuero reforzado compatibles con cualquier guitarra o bajo."
         ),
     },
 ]

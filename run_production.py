@@ -39,6 +39,22 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"⚠️  Database tables may already exist or error occurred: {e}\n")
 
+    # Auto-seed if database is empty
+    try:
+        from config.database import SessionLocal
+        from models.product import ProductModel
+        db = SessionLocal()
+        product_count = db.query(ProductModel).count()
+        db.close()
+        if product_count == 0:
+            print("🌱 Database is empty — running seed data...")
+            from seed_data import seed_database
+            seed_database()
+        else:
+            print(f"✅ Database already has {product_count} products — skipping seed\n")
+    except Exception as e:
+        print(f"⚠️  Seed check failed (non-fatal): {e}\n")
+
     print(f"""
 ╔══════════════════════════════════════════════════════════════╗
 ║  🚀 FastAPI E-commerce - High Performance Production Mode  ║
