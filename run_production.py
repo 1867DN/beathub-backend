@@ -55,6 +55,33 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"⚠️  Seed check failed (non-fatal): {e}\n")
 
+    # Auto-create admin user if none exists
+    try:
+        from config.database import SessionLocal
+        from models.client import ClientModel
+        from services.auth_service import hash_password
+        db = SessionLocal()
+        admin = db.query(ClientModel).filter(ClientModel.role == "admin").first()
+        if not admin:
+            admin_email = os.getenv("ADMIN_EMAIL", "leandro.admin@hotmail.com")
+            admin_password = os.getenv("ADMIN_PASSWORD", "admin1337")
+            new_admin = ClientModel(
+                name="Admin",
+                lastname="BeatHub",
+                email=admin_email,
+                telephone="",
+                password_hash=hash_password(admin_password),
+                role="admin",
+            )
+            db.add(new_admin)
+            db.commit()
+            print(f"🔑 Admin user created: {admin_email}")
+        else:
+            print(f"✅ Admin user already exists: {admin.email}")
+        db.close()
+    except Exception as e:
+        print(f"⚠️  Admin seed failed (non-fatal): {e}\n")
+
     print(f"""
 ╔══════════════════════════════════════════════════════════════╗
 ║  🚀 FastAPI E-commerce - High Performance Production Mode  ║
